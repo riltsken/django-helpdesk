@@ -27,7 +27,7 @@ from helpdesk.forms import TicketForm, UserSettingsForm, EmailIgnoreForm, EditTi
 from helpdesk.lib import send_templated_mail, line_chart, bar_chart, query_to_dict, apply_query, safe_template_context
 from helpdesk.models import Ticket, Queue, FollowUp, TicketChange, PreSetReply, Attachment, SavedSearch, IgnoreEmail, TicketCC
 from helpdesk.settings import HAS_TAG_SUPPORT
-  
+
 if HAS_TAG_SUPPORT:
     from tagging.models import Tag, TaggedItem
 
@@ -109,7 +109,7 @@ def followup_edit(request, ticket_id, followup_id, ):
                                       'public': followup.public,
                                       'new_status': followup.new_status,
                                       })
-        
+
         return render_to_response('helpdesk/followup_edit.html',
             RequestContext(request, {
                 'followup': followup,
@@ -130,7 +130,7 @@ def followup_edit(request, ticket_id, followup_id, ):
             new_followup = FollowUp(title=title, date=old_date, ticket=_ticket, comment=comment, public=public, new_status=new_status, )
             new_followup.save()
         return HttpResponseRedirect(reverse('helpdesk_view', args=[ticket.id]))
-            
+
 def view_ticket(request, ticket_id):
     ticket = get_object_or_404(Ticket, id=ticket_id)
 
@@ -178,9 +178,11 @@ def update_ticket(request, ticket_id, public=False):
     new_status = int(request.POST.get('new_status', ticket.status))
     title = request.POST.get('title', '')
     public = request.POST.get('public', False)
-    owner = int(request.POST.get('owner', None))
     priority = int(request.POST.get('priority', ticket.priority))
     tags = request.POST.get('tags', '')
+    owner = request.POST.get('owner', None)
+    if owner:
+        owner = int(owner)
 
     # We need to allow the 'ticket' and 'queue' contexts to be applied to the
     # comment.
@@ -191,7 +193,7 @@ def update_ticket(request, ticket_id, public=False):
     if owner is None and ticket.assigned_to:
         owner = ticket.assigned_to.id
 
-    f = FollowUp(ticket=ticket, date=datetime.now(), comment=comment)
+    f = FollowUp(ticket=ticket, user=request.user, date=datetime.now(), comment=comment)
 
     if request.user.is_staff:
         f.user = request.user
@@ -285,7 +287,7 @@ def update_ticket(request, ticket_id, public=False):
 
     messages_sent_to = []
 
-    # ticket might have changed above, so we re-instantiate context with the 
+    # ticket might have changed above, so we re-instantiate context with the
     # (possibly) updated ticket.
     context = safe_template_context(ticket)
     context.update(
@@ -368,7 +370,7 @@ def update_ticket(request, ticket_id, public=False):
 
     ticket.save()
 
-    if request.user.is_staff:
+    if request.user.is_staff or public:
         return HttpResponseRedirect(ticket.get_absolute_url())
     else:
         return HttpResponseRedirect(ticket.ticket_url)
@@ -530,7 +532,7 @@ def ticket_list(request):
             or  request.GET.has_key('status')
             or  request.GET.has_key('q')
             or  request.GET.has_key('sort')
-            or  request.GET.has_key('sortreverse') 
+            or  request.GET.has_key('sortreverse')
             or  request.GET.has_key('tags') ):
 
         # Fall-back if no querying is being done, force the list to only
@@ -616,7 +618,7 @@ def ticket_list(request):
         if get_key != "page":
             query_string.append("%s=%s" % (get_key, get_value))
 
-    tag_choices = [] 
+    tag_choices = []
     if HAS_TAG_SUPPORT:
         # FIXME: restrict this to tags that are actually in use
         tag_choices = Tag.objects.all()
@@ -649,7 +651,7 @@ def edit_ticket(request, ticket_id):
             return HttpResponseRedirect(ticket.get_absolute_url())
     else:
         form = EditTicketForm(instance=ticket)
-    
+
     return render_to_response('helpdesk/edit_ticket.html',
         RequestContext(request, {
             'form': form,

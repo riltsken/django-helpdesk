@@ -34,7 +34,7 @@ urlpatterns = patterns('helpdesk.views.staff',
     url(r'^tickets/(?P<ticket_id>[0-9]+)/$',
         'view_ticket',
         name='helpdesk_view'),
-    
+
     url(r'^tickets/(?P<ticket_id>[0-9]+)/followup_edit/(?P<followup_id>[0-9]+)/$',
         'followup_edit',
         name='helpdesk_followup_edit'),
@@ -90,7 +90,7 @@ urlpatterns = patterns('helpdesk.views.staff',
     url(r'^save_query/$',
         'save_query',
         name='helpdesk_savequery'),
-    
+
     url(r'^delete_query/(?P<id>[0-9]+)/$',
         'delete_saved_query',
         name='helpdesk_delete_query'),
@@ -162,12 +162,12 @@ urlpatterns += patterns('',
         'django.views.generic.simple.direct_to_template',
         {'template': 'helpdesk/help_api.html',},
         name='helpdesk_api_help'),
-    
+
     url(r'^help/context/$',
         'django.views.generic.simple.direct_to_template',
         {'template': 'helpdesk/help_context.html',},
         name='helpdesk_help_context'),
-    
+
     url(r'^system_settings/$',
         'django.views.generic.simple.direct_to_template',
         {

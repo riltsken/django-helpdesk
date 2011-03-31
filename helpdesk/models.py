@@ -241,7 +241,7 @@ class Ticket(models.Model):
         (REOPENED_STATUS, _('Reopened')),
         (RESOLVED_STATUS, _('Resolved')),
         (CLOSED_STATUS, _('Closed')),
-        (DUPLICATE_STATUS, _('Duplicate')),        
+        (DUPLICATE_STATUS, _('Duplicate')),
     )
 
     PRIORITY_CHOICES = (
@@ -466,7 +466,7 @@ class FollowUp(models.Model):
         )
 
     date = models.DateTimeField(
-        _('Date'), 
+        _('Date'),
         default = datetime.now()
         )
 
@@ -517,11 +517,11 @@ class FollowUp(models.Model):
     def get_absolute_url(self):
         return u"%s#followup%s" % (self.ticket.get_absolute_url(), self.id)
 
-    def save(self, force_insert=False, force_update=False):
+    def save(self, force_insert=False, force_update=False, **kwargs):
         t = self.ticket
         t.modified = datetime.now()
         t.save()
-        super(FollowUp, self).save(force_insert, force_update)
+        super(FollowUp, self).save(force_insert, force_update, **kwargs)
 
 
 class TicketChange(models.Model):
@@ -745,7 +745,7 @@ class EmailTemplate(models.Model):
         help_text=_('The same context is available here as in plain_text, '
             'above.'),
         )
-    
+
     locale = models.CharField(
         _('Locale'),
         max_length=10,
@@ -859,7 +859,7 @@ class KBItem(models.Model):
 class SavedSearch(models.Model):
     """
     Allow a user to save a ticket search, eg their filtering and sorting
-    options, and optionally share it with other users. This lets people 
+    options, and optionally share it with other users. This lets people
     easily create a set of commonly-used filters, such as:
         * My tickets waiting on me
         * My tickets waiting on submitter
@@ -899,7 +899,7 @@ class SavedSearch(models.Model):
 class UserSettings(models.Model):
     """
     A bunch of user-specific settings that we want to be able to define, such
-    as notification preferences and other things that should probably be 
+    as notification preferences and other things that should probably be
     configurable.
 
     We should always refer to user.usersettings.settings['setting_name'].
@@ -941,7 +941,7 @@ class UserSettings(models.Model):
 
 def create_usersettings(sender, created_models=[], instance=None, created=False, **kwargs):
     """
-    Helper function to create UserSettings instances as 
+    Helper function to create UserSettings instances as
     required, eg when we first create the UserSettings database
     table via 'syncdb' or when we save a new user.
 
@@ -956,7 +956,7 @@ def create_usersettings(sender, created_models=[], instance=None, created=False,
     elif UserSettings in created_models:
         # We just created the UserSettings model, lets create a UserSettings
         # entry for each existing user. This will only happen once (at install
-        # time, or at upgrade) when the UserSettings model doesn't already 
+        # time, or at upgrade) when the UserSettings model doesn't already
         # exist.
         for u in User.objects.all():
             try:
@@ -970,8 +970,8 @@ models.signals.post_save.connect(create_usersettings, sender=User)
 
 class IgnoreEmail(models.Model):
     """
-    This model lets us easily ignore e-mails from certain senders when 
-    processing IMAP and POP3 mailboxes, eg mails from postmaster or from 
+    This model lets us easily ignore e-mails from certain senders when
+    processing IMAP and POP3 mailboxes, eg mails from postmaster or from
     known trouble-makers.
     """
     queues = models.ManyToManyField(
@@ -1044,11 +1044,11 @@ class IgnoreEmail(models.Model):
 
 class TicketCC(models.Model):
     """
-    Often, there are people who wish to follow a ticket who aren't the 
+    Often, there are people who wish to follow a ticket who aren't the
     person who originally submitted it. This model provides a way for those
     people to follow a ticket.
 
-    In this circumstance, a 'person' could be either an e-mail address or 
+    In this circumstance, a 'person' could be either an e-mail address or
     an existing system user.
     """
 
@@ -1198,6 +1198,13 @@ class TicketCustomFieldValue(models.Model):
 
     def __unicode__(self):
         return '%s / %s' % (self.ticket, self.field)
+
+    def to_python(self):
+        if self.value:
+		    if self.field.data_type == 'date':
+			    return datetime.strptime(self.value, '%Y-%m-%d')
+		    if self.field.data_type == 'time':
+			    return datetime.strptime(self.value, '%H:%M:%S')
 
     class Meta:
         unique_together = ('ticket', 'field'),
