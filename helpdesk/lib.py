@@ -79,15 +79,15 @@ def send_templated_mail(template_name, email_context, recipients, sender=None, b
 
     email_html_base_file = os.path.join('helpdesk', locale, 'email_html_base.html')
 
-    
+
     ''' keep new lines in html emails '''
     from django.utils.safestring import mark_safe
-    
+
     if context.has_key('comment'):
         html_txt = context['comment']
         html_txt = html_txt.replace('\r\n', '<br>')
         context['comment'] = mark_safe(html_txt)
-    
+
     html_part = loader.get_template_from_string(
         "{%% extends '%s' %%}{%% block title %%}%s{%% endblock %%}{%% block content %%}%s{%% endblock %%}" % (email_html_base_file, t.heading, t.html)
         ).render(context)
@@ -96,11 +96,8 @@ def send_templated_mail(template_name, email_context, recipients, sender=None, b
         "{{ ticket.ticket }} {{ ticket.title|safe }} %s" % t.subject
         ).render(context)
 
-    if type(recipients) == str:
-        if recipients.find(','):
-            recipients = recipients.split(',')
-    elif type(recipients) != list:
-        recipients = [recipients,]
+    if type(recipients) != list:
+        recipients = recipients.split(',')
 
     msg = EmailMultiAlternatives(   subject_part,
                                     text_part,
@@ -242,13 +239,13 @@ def apply_query(queryset, params):
     """
     Apply a dict-based set of filters & paramaters to a queryset.
 
-    queryset is a Django queryset, eg MyModel.objects.all() or 
+    queryset is a Django queryset, eg MyModel.objects.all() or
              MyModel.objects.filter(user=request.user)
 
     params is a dictionary that contains the following:
         filtering: A dict of Django ORM filters, eg:
             {'user__id__in': [1, 3, 103], 'title__contains': 'foo'}
-        other_filter: Another filter of some type, most likely a 
+        other_filter: Another filter of some type, most likely a
             set of Q() objects.
         sorting: The name of the column to sort by
     """
@@ -272,7 +269,7 @@ def safe_template_context(ticket):
     """
     Return a dictionary that can be used as a template context to render
     comments and other details with ticket or queue paramaters. Note that
-    we don't just provide the Ticket & Queue objects to the template as 
+    we don't just provide the Ticket & Queue objects to the template as
     they could reveal confidential information. Just imagine these two options:
         * {{ ticket.queue.email_box_password }}
         * {{ ticket.assigned_to.password }}
@@ -296,7 +293,7 @@ def safe_template_context(ticket):
         else:
             context['queue'][field] = attr
 
-    for field in (  'title', 'created', 'modified', 'submitter_email', 
+    for field in (  'title', 'created', 'modified', 'submitter_email',
                     'status', 'get_status_display', 'on_hold', 'description',
                     'resolution', 'priority', 'get_priority_display',
                     'last_escalation', 'ticket', 'ticket_for_url',
@@ -317,7 +314,7 @@ def safe_template_context(ticket):
 def text_is_spam(text, request):
     # Based on a blog post by 'sciyoshi':
     # http://sciyoshi.com/blog/2008/aug/27/using-akismet-djangos-new-comments-framework/
-    # This will return 'True' is the given text is deemed to be spam, or 
+    # This will return 'True' is the given text is deemed to be spam, or
     # False if it is not spam. If it cannot be checked for some reason, we
     # assume it isn't spam.
     from django.contrib.sites.models import Site
