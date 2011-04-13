@@ -9,7 +9,7 @@ django-helpdesk
 ===============
 
 This is a Django-powered helpdesk ticket tracker, designed to
-plug into an existing Django website and provide you with 
+plug into an existing Django website and provide you with
 internal (or, perhaps, external) helpdesk management.
 """
 
@@ -33,7 +33,7 @@ setup(
     keywords=['django', 'helpdesk', 'tickets', 'incidents', 'cases'],
     author='Ross Poulton',
     author_email='ross@rossp.org',
-    url='http://github.com/rossp/django-helpdesk',
+    url='http://github.com/riltsken/django-helpdesk',
     license='BSD',
     packages=find_packages(),
     include_package_data=True,
