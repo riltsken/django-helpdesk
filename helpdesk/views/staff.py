@@ -293,8 +293,9 @@ def update_ticket(request, ticket_id, public=False):
     context.update(
         resolution=ticket.resolution,
         comment=f.comment,
+		request=request
         )
-
+    print context
     if ticket.submitter_email and public and (f.comment or (f.new_status in (Ticket.RESOLVED_STATUS, Ticket.CLOSED_STATUS))):
 
         if f.new_status == Ticket.RESOLVED_STATUS:
@@ -416,6 +417,7 @@ def mass_update(request):
                 'ticket': t,
                 'queue': t.queue,
                 'resolution': t.resolution,
+				'request': request
             }
 
             messages_sent_to = []

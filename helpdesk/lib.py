@@ -67,7 +67,6 @@ def send_templated_mail(template_name, email_context, recipients, sender=None, b
             t = EmailTemplate.objects.get(template_name__iexact=template_name, locale__isnull=True)
         except EmailTemplate.DoesNotExist:
             return # just ignore if template doesn't exist
-
     if not sender:
         sender = settings.DEFAULT_FROM_EMAIL
 
@@ -297,7 +296,8 @@ def safe_template_context(ticket):
                     'status', 'get_status_display', 'on_hold', 'description',
                     'resolution', 'priority', 'get_priority_display',
                     'last_escalation', 'ticket', 'ticket_for_url',
-                    'get_status', 'ticket_url', 'staff_url', '_get_assigned_to'
+                    'get_status', 'ticket_url', 'staff_url', '_get_assigned_to',
+                    'get_absolute_url'
                  ):
         attr = getattr(ticket, field, None)
         if callable(attr):

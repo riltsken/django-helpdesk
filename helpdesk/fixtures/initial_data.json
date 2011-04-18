@@ -5,8 +5,8 @@
         "fields": {
             "locale": "en", 
             "template_name": "add_assignee", 
-            "plain_text": "A ticket has been updated.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {{ ticket.get_absolute_url }}\\n\\n\r\n\r\nChanges include:\\n\r\n{{ assignee.first_name }} {{ assignee.last_name }} has been assigned to this ticket.", 
-            "html": "A ticket has been updated.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {{ ticket.get_absolute_url }}<br><br>\r\n\r\nChanges include:<br>\r\n{{ assignee.first_name }} {{ assignee.last_name }} has been assigned to this ticket.", 
+            "plain_text": "A ticket has been updated.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }} \\n\\n\r\n\r\nChanges include:\\n\r\n{{ assignee.first_name }} {{ assignee.last_name }} has been assigned to this ticket.", 
+            "html": "A ticket has been updated.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }}<br><br>\r\n\r\nChanges include:<br>\r\n{{ assignee.first_name }} {{ assignee.last_name }} has been assigned to this ticket.", 
             "heading": "The ticket {{ ticket.title }} has been updated.", 
             "subject": "(Added Assignee)"
         }
@@ -17,8 +17,8 @@
         "fields": {
             "locale": "en", 
             "template_name": "closed_cc", 
-            "plain_text": "A ticket has been closed.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {{ ticket.get_absolute_url }}\\n\\n\r\n\r\nClosing comment:\\n\r\n{% if comment %}{{ comment }}\\n{% endif %}\r\n{% if resolution %}{{ resolution }}\\n{% endif %}\r\n\\n\r\n{{ ticket.description }}", 
-            "html": "A ticket has been closed.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {{ ticket.get_absolute_url }}<br><br>\r\n\r\nClosing comment:<br>\r\n{% if comment %}{{ comment }}<br>{% endif %}\r\n{% if resolution %}{{ resolution }}<br>{% endif %}\r\n<br>\r\n{{ ticket.description }}", 
+            "plain_text": "A ticket has been closed.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }} \\n\\n\r\n\r\n{% if comment or resolution %}\r\nClosing comment:\\n\r\n{% if comment %}{{ comment }}\\n{% endif %}\r\n{% if resolution %}{{ resolution }}\\n{% endif %}\r\n{% endif %}\r\n\\n", 
+            "html": "A ticket has been closed.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }}<br><br>\r\n\r\n{% if comment or resolution %}\r\nClosing comment:<br>\r\n{% if comment %}{{ comment }}<br>{% endif %}\r\n{% if resolution %}{{ resolution }}<br>{% endif %}\r\n{% endif %}\r\n<br>\r\n", 
             "heading": "The ticket {{ ticket.title }} has been closed.", 
             "subject": "(Closed)"
         }
@@ -29,8 +29,8 @@
         "fields": {
             "locale": "en", 
             "template_name": "closed_submitter", 
-            "plain_text": "A ticket has been closed.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {{ ticket.get_absolute_url }}\\n\\n\r\n\r\nClosing comment:\\n\r\n{% if comment %}{{ comment }}\\n{% endif %}\r\n{% if resolution %}{{ resolution }}\\n{% endif %}\r\n\\n\r\n{{ ticket.description }}", 
-            "html": "A ticket has been closed.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {{ ticket.get_absolute_url }}<br><br>\r\n\r\nClosing comment:<br>\r\n{% if comment %}{{ comment }}<br>{% endif %}\r\n{% if resolution %}{{ resolution }}<br>{% endif %}\r\n<br>\r\n{{ ticket.description }}", 
+            "plain_text": "A ticket has been closed.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }} \\n\\n\r\n\r\n{% if comment or resolution %}\r\nClosing comment:\\n\r\n{% if comment %}{{ comment }}\\n{% endif %}\r\n{% if resolution %}{{ resolution }}\\n{% endif %}\r\n{% endif %}\r\n\\n", 
+            "html": "A ticket has been closed.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }}<br><br>\r\n\r\n{% if comment or resolution %}\r\nClosing comment:<br>\r\n{% if comment %}{{ comment }}<br>{% endif %}\r\n{% if resolution %}{{ resolution }}<br>{% endif %}\r\n{% endif %}\r\n<br>", 
             "heading": "The ticket {{ ticket.title }} has been closed.", 
             "subject": "(Closed)"
         }
@@ -41,8 +41,8 @@
         "fields": {
             "locale": "en", 
             "template_name": "newticket_cc", 
-            "plain_text": "A new ticket has been created.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {{ ticket.get_absolute_url }}\\n\\n\r\n\r\nDescription:\\n\r\n{{ ticket.description }}", 
-            "html": "A new ticket has been created.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {{ ticket.get_absolute_url }}<br><br>\r\n\r\nDescription:<br>\r\n{{ ticket.description }}", 
+            "plain_text": "A new ticket has been created.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }} \\n\\n\r\n\r\nDescription:\\n\r\n{{ ticket.description }}", 
+            "html": "A new ticket has been created.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }}<br><br>\r\n\r\nDescription:<br>\r\n{{ ticket.description }}", 
             "heading": "New ticket {{ ticket.title }}", 
             "subject": "(Created)"
         }
@@ -53,8 +53,8 @@
         "fields": {
             "locale": "en", 
             "template_name": "newticket_submitter", 
-            "plain_text": "A new ticket has been created.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {{ ticket.get_absolute_url }}\r\n\r\nDescription:\\n\r\n{{ ticket.description }}", 
-            "html": "A new ticket has been created.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {{ ticket.get_absolute_url }}<br><br>\r\n\r\nDescription:<br>\r\n{{ ticket.description }}", 
+            "plain_text": "A new ticket has been created.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }} \\n\\n\r\n\r\nDescription:\\n\r\n{{ ticket.description }}", 
+            "html": "A new ticket has been created.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }}<br><br>\r\n\r\nDescription:<br>\r\n{{ ticket.description }}", 
             "heading": "New ticket {{ ticket.title }}", 
             "subject": "(Created)"
         }
@@ -65,8 +65,8 @@
         "fields": {
             "locale": "en", 
             "template_name": "removed_assignee", 
-            "plain_text": "A ticket has been updated.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {{ ticket.get_absolute_url }}\\n\\n\r\n\r\nChanges include:\\n\r\n{{ assignee.first_name }} {{ assignee.last_name }} has been unassigned from this ticket.", 
-            "html": "A ticket has been updated.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {{ ticket.get_absolute_url }}<br><br>\r\n\r\nChanges include:<br>\r\n{{ assignee.first_name }} {{ assignee.last_name }} has been unassigned from this ticket.", 
+            "plain_text": "A ticket has been updated.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }} \\n\\n\r\n\r\nChanges include:\\n\r\n{{ assignee.first_name }} {{ assignee.last_name }} has been unassigned from this ticket.", 
+            "html": "A ticket has been updated.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }}<br><br>\r\n\r\nChanges include:<br>\r\n{{ assignee.first_name }} {{ assignee.last_name }} has been unassigned from this ticket.", 
             "heading": "The ticket {{ ticket.title }} has been updated.", 
             "subject": "(Removed Assignee)"
         }
@@ -77,8 +77,8 @@
         "fields": {
             "locale": "en", 
             "template_name": "resolved_cc", 
-            "plain_text": "A ticket has been resolved.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {{ ticket.get_absolute_url }}\\n\\n\r\n\r\nClosing comment:\\n\r\n{% if comment %}{{ comment }}\\n{% endif %}\r\n{% if resolution %}{{ resolution }}\\n{% endif %}\r\n\\n\r\n{{ ticket.description }}", 
-            "html": "A ticket has been resolved.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {{ ticket.get_absolute_url }}<br><br>\r\n\r\nClosing comment:<br>\r\n{% if comment %}{{ comment }}<br>{% endif %}\r\n{% if resolution %}{{ resolution }}<br>{% endif %}\r\n<br>\r\n{{ ticket.description }}", 
+            "plain_text": "A ticket has been resolved.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }} \\n\\n\r\n\r\n{% if comment or resolution %}\r\nClosing comment:\\n\r\n{% if comment %}{{ comment }}\\n{% endif %}\r\n{% if resolution %}{{ resolution }}\\n{% endif %}\r\n{% endif %}\r\n\\n", 
+            "html": "A ticket has been resolved.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }}<br><br>\r\n{% if comment or resolution %}\r\nClosing comment:<br>\r\n{% if comment %}{{ comment }}<br>{% endif %}\r\n{% if resolution %}{{ resolution }}<br>{% endif %}\r\n{% endif %}\r\n<br>", 
             "heading": "The ticket {{ ticket.title }} has been {{ resolution }}.", 
             "subject": "(Resolved)"
         }
@@ -89,8 +89,8 @@
         "fields": {
             "locale": "en", 
             "template_name": "resolved_submitter", 
-            "plain_text": "The ticket {{ ticket.title }} for {{ queue.title }} has been updated.\\n\\n\r\n\r\nChanges include:\r\n{% if comment %}{{ comment }}\\n{% endif %}\r\n{% if resolution %}{{ resolution }}{% endif %}", 
-            "html": "The ticket {{ ticket.title }} for {{ queue.title }} has been updated.\r\n<br><br>\r\n\r\nChanges include: \r\n{% if comment %}{{ comment }}<br>{% endif %}\r\n{% if resolution %}{{ resolution }}{% endif %}", 
+            "plain_text": "A ticket has been resolved.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }} \\n\\n\r\n\r\n{% if comment or resolution %}\r\nClosing comment:\\n\r\n{% if comment %}{{ comment }}\\n{% endif %}\r\n{% if resolution %}{{ resolution }}\\n{% endif %}\r\n{% endif %}\r\n\\n", 
+            "html": "A ticket has been resolved.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }}<br><br>\r\n{% if comment or resolution %}\r\nClosing comment:<br>\r\n{% if comment %}{{ comment }}<br>{% endif %}\r\n{% if resolution %}{{ resolution }}<br>{% endif %}\r\n{% endif %}\r\n<br>", 
             "heading": "The ticket {{ ticket.title }} has been {{ resolution }}.", 
             "subject": "(Resolved)"
         }
@@ -101,8 +101,8 @@
         "fields": {
             "locale": "en", 
             "template_name": "updated_cc", 
-            "plain_text": "A ticket has been updated.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {{ ticket.get_absolute_url }}\\n\\n\r\n\r\nChanges include:\\n\r\n{% if comment %}{{ comment }}\\n{% endif %}\r\n{% if resolution %}{{ resolution }}\\n{% endif %}", 
-            "html": "A ticket has been updated.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {{ ticket.get_absolute_url }}<br><br>\r\n\r\nChanges include:<br>\r\n{% if comment %}{{ comment }}<br>{% endif %}\r\n{% if resolution %}{{ resolution }}<br>{% endif %}", 
+            "plain_text": "A ticket has been updated.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }} \\n\\n\r\n\r\n{% if comment %}\r\nChanges include:\\n\r\n{{ comment }}\\n\r\n{% endif %}\r\n", 
+            "html": "A ticket has been updated.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }}<br><br>\r\n\r\n{% if comment %}\r\nChanges include:<br>\r\n{{ comment }}<br>\r\n{% endif %}\r\n", 
             "heading": "The ticket {{ ticket.title }} has been updated.", 
             "subject": "(Updated)"
         }
@@ -113,8 +113,8 @@
         "fields": {
             "locale": "en", 
             "template_name": "updated_submitter", 
-            "plain_text": "A ticket has been updated.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {{ ticket.get_absolute_url }}\\n\\n\r\n\r\nChanges include:\\n\r\n{% if comment %}{{ comment }}\\n{% endif %}\r\n{% if resolution %}{{ resolution }}\\n{% endif %}", 
-            "html": "A ticket has been updated.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {{ ticket.get_absolute_url }}<br><br>\r\n\r\nChanges include:<br>\r\n{% if comment %}{{ comment }}<br>{% endif %}\r\n{% if resolution %}{{ resolution }}<br>{% endif %}", 
+            "plain_text": "A ticket has been updated.\\n\\n\r\nTicket: {{ ticket.title }}\\n\r\nQueue: {{ queue.title }}\\n\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }} \\n\\n\r\n\r\n{% if comment %}\r\nChanges include:\\n\r\n{{ comment }}\\n\r\n{% endif %}\r\n", 
+            "html": "A ticket has been updated.<br><br>\r\nTicket: {{ ticket.title }}<br>\r\nQueue: {{ queue.title }}<br>\r\nLink to ticket: {% if 'HTTPS' in request.META.SERVER_PROTOCOL %}https{% else %}http://{% endif %}{{ request.META.HTTP_HOST }}{{ ticket.get_absolute_url }}<br><br>\r\n\r\n{% if comment %}\r\nChanges include:<br>\r\n{{ comment }}<br>\r\n{% endif %}\r\n", 
             "heading": "The ticket {{ ticket.title }} has been updated.", 
             "subject": "(Updated)"
         }
