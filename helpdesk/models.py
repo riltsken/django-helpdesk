@@ -467,7 +467,7 @@ class FollowUp(models.Model):
 
     date = models.DateTimeField(
         _('Date'),
-        default = datetime.now()
+        default = datetime.now
         )
 
     title = models.CharField(
