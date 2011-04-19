@@ -139,7 +139,7 @@ class TicketForm(forms.Form):
                 fieldclass = forms.IPAddressField
             elif field.data_type == 'slug':
                 fieldclass = forms.SlugField
-            
+
             self.fields['custom_%s' % field.name] = fieldclass(**instanceargs)
 
 
@@ -169,7 +169,7 @@ class TicketForm(forms.Form):
             except User.DoesNotExist:
                 t.assigned_to = None
         t.save()
-        
+
         for field, value in self.cleaned_data.items():
             if field.startswith('custom_'):
                 field_name = field.replace('custom_', '')
@@ -192,7 +192,7 @@ class TicketForm(forms.Form):
             }
 
         f.save()
-        
+
         files = []
         if self.cleaned_data['attachment']:
             import mimetypes
@@ -206,9 +206,9 @@ class TicketForm(forms.Form):
                 )
             a.file.save(file.name, file, save=False)
             a.save()
-            
+
             if file.size < getattr(settings, 'MAX_EMAIL_ATTACHMENT_SIZE', 512000):
-                # Only files smaller than 512kb (or as defined in 
+                # Only files smaller than 512kb (or as defined in
                 # settings.MAX_EMAIL_ATTACHMENT_SIZE) are sent via email.
                 files.append(a.file.path)
 
@@ -217,7 +217,7 @@ class TicketForm(forms.Form):
             'queue': q,
             'comment': f.comment,
         }
-        
+
         messages_sent_to = []
 
         if t.submitter_email:
@@ -241,7 +241,6 @@ class TicketForm(forms.Form):
                 files=files,
                 )
             messages_sent_to.append(t.assigned_to.email)
-
         if q.new_ticket_cc and q.new_ticket_cc not in messages_sent_to:
             send_templated_mail(
                 'newticket_cc',
@@ -354,7 +353,7 @@ class PublicTicketForm(forms.Form):
                 fieldclass = forms.IPAddressField
             elif field.data_type == 'slug':
                 fieldclass = forms.SlugField
-            
+
             self.fields['custom_%s' % field.name] = fieldclass(**instanceargs)
 
     def save(self):
@@ -408,9 +407,9 @@ class PublicTicketForm(forms.Form):
                 )
             a.file.save(file.name, file, save=False)
             a.save()
-            
+
             if file.size < getattr(settings, 'MAX_EMAIL_ATTACHMENT_SIZE', 512000):
-                # Only files smaller than 512kb (or as defined in 
+                # Only files smaller than 512kb (or as defined in
                 # settings.MAX_EMAIL_ATTACHMENT_SIZE) are sent via email.
                 files.append(a.file.path)
 
@@ -418,8 +417,6 @@ class PublicTicketForm(forms.Form):
             'ticket': t,
             'queue': q,
         }
-
-        messages_sent_to = []
 
         send_templated_mail(
             'newticket_submitter',
@@ -429,24 +426,19 @@ class PublicTicketForm(forms.Form):
             fail_silently=True,
             files=files,
             )
-        messages_sent_to.append(t.submitter_email)
 
-        if q.new_ticket_cc and q.new_ticket_cc not in messages_sent_to:
+        who_to_notify = []
+        emails = "%s,%s" % (q.new_ticket_cc, q.updated_ticket_cc)
+        for e in emails.split(','):
+            email = e.strip(' ')
+            if email and email != t.submitter_email and email not in who_to_notify:
+                who_to_notify.append(email)
+
+        if who_to_notify:
             send_templated_mail(
                 'newticket_cc',
                 context,
-                recipients=q.new_ticket_cc,
-                sender=q.from_address,
-                fail_silently=True,
-                files=files,
-                )
-            messages_sent_to.append(q.new_ticket_cc)
-
-        if q.updated_ticket_cc and q.updated_ticket_cc != q.new_ticket_cc and q.updated_ticket_cc not in messages_sent_to:
-            send_templated_mail(
-                'newticket_cc',
-                context,
-                recipients=q.updated_ticket_cc,
+                recipients=who_to_notify,
                 sender=q.from_address,
                 fail_silently=True,
                 files=files,
