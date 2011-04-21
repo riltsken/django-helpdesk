@@ -12,6 +12,7 @@ from datetime import datetime
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 from django.utils.translation import ugettext as _
 
 from helpdesk.lib import send_templated_mail
@@ -416,6 +417,7 @@ class PublicTicketForm(forms.Form):
         context = {
             'ticket': t,
             'queue': q,
+			'site': Site.objects.get_current()
         }
 
         send_templated_mail(
