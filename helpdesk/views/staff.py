@@ -10,6 +10,7 @@ views/staff.py - The bulk of the application - provides most business logic and
 from datetime import datetime
 
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.files.base import ContentFile
@@ -126,8 +127,9 @@ def followup_edit(request, ticket_id, followup_id, ):
             new_status = form.cleaned_data['new_status']
             #will save previous date
             old_date = followup.date
+            user = followup.user
             followup.delete()
-            new_followup = FollowUp(title=title, date=old_date, ticket=_ticket, comment=comment, public=public, new_status=new_status, )
+            new_followup = FollowUp(title=title, date=old_date, ticket=_ticket, comment=comment, public=public, new_status=new_status, user=user)
             new_followup.save()
         return HttpResponseRedirect(reverse('helpdesk_view', args=[ticket.id]))
 
@@ -293,9 +295,9 @@ def update_ticket(request, ticket_id, public=False):
     context.update(
         resolution=ticket.resolution,
         comment=f.comment,
-		request=request
+		request=request,
+        site=Site.objects.get_current()
         )
-    print context
     if ticket.submitter_email and public and (f.comment or (f.new_status in (Ticket.RESOLVED_STATUS, Ticket.CLOSED_STATUS))):
 
         if f.new_status == Ticket.RESOLVED_STATUS:
@@ -417,7 +419,8 @@ def mass_update(request):
                 'ticket': t,
                 'queue': t.queue,
                 'resolution': t.resolution,
-				'request': request
+				'request': request,
+                'site': Site.objects.get_current()
             }
 
             messages_sent_to = []
