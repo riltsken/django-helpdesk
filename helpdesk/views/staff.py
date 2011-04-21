@@ -283,7 +283,6 @@ def update_ticket(request, ticket_id, public=False):
                 )
             c.save()
             ticket.tags = tags
-
     if f.new_status == Ticket.RESOLVED_STATUS:
         ticket.resolution = comment
 
@@ -372,6 +371,10 @@ def update_ticket(request, ticket_id, public=False):
             )
 
     ticket.save()
+
+    return_url = request.POST.get('return_url', None)
+    if return_url:
+        return HttpResponseRedirect(return_url)
 
     if request.user.is_staff or public:
         return HttpResponseRedirect(ticket.get_absolute_url())
