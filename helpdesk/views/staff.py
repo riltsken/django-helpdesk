@@ -294,7 +294,7 @@ def update_ticket(request, ticket_id, public=False):
     context.update(
         resolution=ticket.resolution,
         comment=f.comment,
-		request=request,
+        request=request,
         site=Site.objects.get_current()
         )
     if ticket.submitter_email and public and (f.comment or (f.new_status in (Ticket.RESOLVED_STATUS, Ticket.CLOSED_STATUS))):
@@ -351,7 +351,12 @@ def update_ticket(request, ticket_id, public=False):
                 )
             messages_sent_to.append(ticket.assigned_to.email)
 
-    if ticket.queue.updated_ticket_cc and ticket.queue.updated_ticket_cc not in messages_sent_to:
+    updated_ticket_cc = []
+    for e in [email.strip(' ') for email in ticket.queue.updated_ticket_cc.split(',')]:
+        if e not in messages_sent_to:
+            updated_ticket_cc.append(e)
+
+    if updated_ticket_cc:
         if reassigned:
             template_cc = 'assigned_cc'
         elif f.new_status == Ticket.RESOLVED_STATUS:
@@ -364,7 +369,7 @@ def update_ticket(request, ticket_id, public=False):
         send_templated_mail(
             template_cc,
             context,
-            recipients=ticket.queue.updated_ticket_cc,
+            recipients=updated_ticket_cc,
             sender=ticket.queue.from_address,
             fail_silently=True,
             files=files,
@@ -422,7 +427,7 @@ def mass_update(request):
                 'ticket': t,
                 'queue': t.queue,
                 'resolution': t.resolution,
-				'request': request,
+                'request': request,
                 'site': Site.objects.get_current()
             }
 
