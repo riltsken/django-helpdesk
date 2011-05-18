@@ -357,7 +357,7 @@ class PublicTicketForm(forms.Form):
 
             self.fields['custom_%s' % field.name] = fieldclass(**instanceargs)
 
-    def save(self):
+    def save(self,request=None):
         """
         Writes and returns a Ticket() object
         """
@@ -417,7 +417,8 @@ class PublicTicketForm(forms.Form):
         context = {
             'ticket': t,
             'queue': q,
-			'site': Site.objects.get_current()
+			'site': Site.objects.get_current(),
+			'request': request
         }
 
         send_templated_mail(
